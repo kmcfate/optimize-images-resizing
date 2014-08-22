@@ -71,16 +71,23 @@ if ( ! class_exists( 'OIR_Resize_Image' ) ) :
 
 				if ( ! is_wp_error( $image_editor ) ) {
 
-					$image_editor->resize( $wanted_width, $wanted_height, $wanted_crop );
-					$result_image_size = $image_editor->get_size();
+					$result_width = $wanted_width;
+					$result_height = $wanted_height;
+					$filename = $image_editor->generate_filename($wanted_width . 'x' . $wanted_height);
+					if ( ! file_exists($filename)){
 
-					$result_width = $result_image_size['width'];
-					$result_height = $result_image_size['height'];
+						$image_editor->resize( $wanted_width, $wanted_height, $wanted_crop );
+						$result_image_size = $image_editor->get_size();
 
-					$suffix = $result_width . 'x' . $result_height;
-					$filename = $image_editor->generate_filename( $suffix );
+						$result_width = $result_image_size['width'];
+						$result_height = $result_image_size['height'];
 
-					$image_editor->save( $filename );
+						$suffix = $result_width . 'x' . $result_height;
+						$filename = $image_editor->generate_filename( $suffix );
+
+						$image_editor->save( $filename );
+
+					}
 
 					$meta['sizes'][ $size ] = array(
 						'file'      => basename( $filename ),
